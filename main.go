@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"fmt"
+	"math/rand"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -16,6 +17,15 @@ type (
 	}
 )
 
+var randomData []float64
+
+func init() {
+	rand.Seed(454)
+	for i := 0; i < 10000; i++ {
+		randomData = append(randomData, rand.NormFloat64()*100)
+	}
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
@@ -23,6 +33,9 @@ func main() {
 	e.Use(middleware.CORS())
 	e.Get("/hello", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.Get("/api/random", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, randomData)
 	})
 	e.Post("/api/token", func(c echo.Context) error {
 		key := new(key)
@@ -32,6 +45,5 @@ func main() {
 		data := []byte(key.Key)
 		return c.JSON(http.StatusOK, fmt.Sprintf("%x", md5.Sum(data)))
 	})
-	fmt.Printf("Starting Echo server at port 9000\n")
 	e.Run(standard.New(":9000"))
 }
