@@ -2,6 +2,12 @@ FROM golang:onbuild
 
 EXPOSE 9000
 
-COPY main.go .
+RUN mkdir /usr/src/bd-server
 
-CMD go-wrapper run main.go
+COPY main.go /usr/src/bd-server
+
+WORKDIR /usr/src/bd-server
+
+RUN go build -o main .
+
+CMD ["./main"]
