@@ -12,7 +12,7 @@ import (
 
 type (
 	key struct {
-		key string
+		Key string `json:"key"`
 	}
 )
 
@@ -29,7 +29,7 @@ func main() {
 		if err := c.Bind(key); err != nil {
 			return err
 		}
-		data := []byte(key.key)
+		data := []byte(key.Key)
 		return c.JSON(http.StatusOK, fmt.Sprintf("%x", md5.Sum(data)))
 	})
 	fmt.Printf("Starting Echo server at port 9000\n")
