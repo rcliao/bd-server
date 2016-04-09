@@ -15,6 +15,9 @@ type (
 	key struct {
 		Key string `json:"key"`
 	}
+	token struct {
+		Token string `json:"token"`
+	}
 )
 
 var randomData []float64
@@ -43,7 +46,10 @@ func main() {
 			return err
 		}
 		data := []byte(key.Key)
-		return c.JSON(http.StatusOK, fmt.Sprintf("%x", md5.Sum(data)))
+		token := &token{
+			Token: fmt.Sprintf("%x", md5.Sum(data)),
+		}
+		return c.JSON(http.StatusOK, token)
 	})
 	e.Run(standard.New(":9000"))
 }
